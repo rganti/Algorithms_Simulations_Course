@@ -24,17 +24,17 @@ def pair_time(pos_a, vel_a, pos_b, vel_b, sigma):
 
 pos = [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]] #positions of hard disks
 vel = [[0.21, 0.12], [0.71, 0.18], [-0.23, -0.79], [0.78, 0.1177]] #velocity of hard disks
-singles = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)] # Not sure what singles/pairs refers to
-pairs = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
+singles = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)] #has to do with wall collisions
+pairs = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)] #has to do with pair collisions
 sigma = 0.15 #radius of hard disk
 t = 0.0 #time step
 n_events = 100
 for event in range(n_events):
-    wall_times = [wall_time(pos[k][l], vel[k][l], sigma) for k, l  in singles]
-    pair_times = [pair_time(pos[k], vel[k], pos[l], vel[l], sigma) for k, l in pairs]
-    next_event = min(wall_times + pair_times)
+    wall_times = [wall_time(pos[k][l], vel[k][l], sigma) for k, l  in singles] #searching for pos, vel according to singles
+    pair_times = [pair_time(pos[k], vel[k], pos[l], vel[l], sigma) for k, l in pairs] #searching for pos, vel according to pairs
+    next_event = min(wall_times + pair_times) # takes minimum of wall_times and pair_times to get next event
     t += next_event
-    for k, l in singles: pos[k][l] += vel[k][l] * next_event 
+    for k, l in singles: pos[k][l] += vel[k][l] * next_event #reconfiguring positions of disks
     if min(wall_times) < min(pair_times):
         collision_disk, direction = singles[wall_times.index(next_event)]
         vel[collision_disk][direction] *= -1.0
