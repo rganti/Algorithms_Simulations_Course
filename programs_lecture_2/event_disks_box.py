@@ -1,4 +1,4 @@
-import math
+import math, sys
 
 def wall_time(pos_a, vel_a, sigma):
     if vel_a > 0.0:#Not sure why this condition is specified
@@ -14,7 +14,7 @@ def pair_time(pos_a, vel_a, pos_b, vel_b, sigma):
     del_x_sq = del_x[0] ** 2 + del_x[1] ** 2
     del_v = [vel_b[0] - vel_a[0], vel_b[1] - vel_a[1]]
     del_v_sq = del_v[0] ** 2 + del_v[1] ** 2
-    scal = del_v[0] * del_x[0] + del_v[1] * del_x[1] # scal = dv_{x}dx + dv_{y}dy
+    scal = del_v[0] * del_x[0] + del_v[1] * del_x[1] # scal = dv_{x}dx + dv_{y}dy # del_v vector dotted with del_x vector
     Upsilon = scal ** 2 - del_v_sq * ( del_x_sq - 4.0 * sigma **2)
     if Upsilon > 0.0 and scal < 0.0:
         del_t = - (scal + math.sqrt(Upsilon)) / del_v_sq
@@ -35,16 +35,16 @@ for event in range(n_events):
     next_event = min(wall_times + pair_times) # takes minimum of wall_times and pair_times to get next event
     t += next_event
     for k, l in singles: pos[k][l] += vel[k][l] * next_event #reconfiguring positions of disks
-    if min(wall_times) < min(pair_times):
-        collision_disk, direction = singles[wall_times.index(next_event)]
-        vel[collision_disk][direction] *= -1.0
-    else: 
+    if min(wall_times) < min(pair_times): # if disk hits wall first
+        collision_disk, direction = singles[wall_times.index(next_event)] # if it hits the wall, single[event_time] will yield specific pair in singles(1st:specified collision disk, 2nd:x or y direction)
+        vel[collision_disk][direction] *= -1.0 # velocity conserved but multiplied by -1 to change direction
+    else: # if disk hits another disk first
         a, b = pairs[pair_times.index(next_event)]
         del_x = [pos[b][0] - pos[a][0], pos[b][1] - pos[a][1]]
         abs_x = math.sqrt(del_x[0] ** 2 + del_x[1] ** 2)
-        e_perp = [c / abs_x for c in del_x]
+        e_perp = [c / abs_x for c in del_x] # normal vector
         del_v = [vel[b][0] - vel[a][0], vel[b][1] - vel[a][1]]
-        scal = del_v[0] * e_perp[0] + del_v[1] * e_perp[1]
+        scal = del_v[0] * e_perp[0] + del_v[1] * e_perp[1] #This is del_v vector dotted with normal vector, e_perp
         for k in range(2): 
             vel[a][k] += e_perp[k] * scal 
             vel[b][k] -= e_perp[k] * scal 

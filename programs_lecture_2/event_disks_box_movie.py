@@ -26,15 +26,16 @@ def pair_time(pos_a, vel_a, pos_b, vel_b, sigma):
     return del_t
 
 def min_arg(l):
-    return min(zip(l, range(len(l))))
+    return min(zip(l, range(len(l)))) #will take array l and zip creates tuples # min takes minimum of tuples
+# **Why is zip used here to generate tuples??
 
-def compute_next_event(pos, vel):
+def compute_next_event(pos, vel): #finds next_event
     wall_times = [wall_time(pos[k][l], vel[k][l], sigma) for k, l in singles]
     pair_times = [pair_time(pos[k], vel[k], pos[l], vel[l], sigma) for k, l in pairs]
-    return min_arg(wall_times + pair_times)
+    return min_arg(wall_times + pair_times) #reports minimum tuple of wall_times and pair_times array
 
-def compute_new_velocities(pos, vel, next_event_arg):
-    if next_event_arg < len(singles):
+def compute_new_velocities(pos, vel, next_event_arg): #recomputes velocities after collision event 
+    if next_event_arg < len(singles): #next_event_arg is probably second entry in tuple spit out by compute_next_event
         collision_disk, direction = singles[next_event_arg]
         vel[collision_disk][direction] *= -1.0
     else:
@@ -48,7 +49,7 @@ def compute_new_velocities(pos, vel, next_event_arg):
             vel[a][k] += e_perp[k] * scal
             vel[b][k] -= e_perp[k] * scal
 
-pylab.subplots_adjust(left=0.10, right=0.90, top=0.90, bottom=0.10)
+pylab.subplots_adjust(left=0.10, right=0.90, top=0.90, bottom=0.10) #generates subplots 0.10 at the left until 0.9: sets spacing
 pylab.gcf().set_size_inches(6, 6)
 img = 0
 if not os.path.exists(output_dir): os.makedirs(output_dir)
@@ -57,13 +58,13 @@ def snapshot(t, pos, vel, colors, arrow_scale=.2):
     pylab.cla()
     pylab.axis([0, 1, 0, 1])
     pylab.setp(pylab.gca(), xticks=[0, 1], yticks=[0, 1])
-    for (x, y), (dx, dy), c in zip(pos, vel, colors):
-        dx *= arrow_scale
-        dy *= arrow_scale
-        circle = pylab.Circle((x, y), radius=sigma, fc=c)
+    for (x, y), (dx, dy), c in zip(pos, vel, colors): #putting position, velocity, and colors arrays into 3D tuple.
+        dx *= arrow_scale #rescale vel_x by multiplying w/ arrow_scale
+        dy *= arrow_scale #rescale vel_y by multiplying w/ arrow_scale
+        circle = pylab.Circle((x, y), radius=sigma, fc=c) #fc sets color of circle
         pylab.gca().add_patch(circle)
     pylab.arrow( x, y, dx, dy, fc="k", ec="k", head_width=0.05, head_length=0.05 )
-    pylab.text(.5, 1.03, 't = %.2f' % t, ha='center')
+    pylab.text(.5, 1.03, 't = %.2f' % t, ha='center') #.5 for middle of box on x-axis, 1.03 is just above box on y-axis
     pylab.savefig(os.path.join(output_dir, '%d.png' % img))
     img += 1
 
