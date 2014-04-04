@@ -41,8 +41,8 @@ def snapshot(pos, colors, border_color = 'k'):
     pylab.close()
     img += 1
 
-def periodicize(config):
-    images = [-1.0, 0.0, 1.0]
+def periodicize(config): 
+    images = [-1.0, 0.0, 1.0] #generates images of disks
     return [(x + dx, y + dy) for (x,y) in config for dx in images for dy in images]
 
 N = 16
@@ -56,5 +56,5 @@ for run in range(n_runs):
     print iterations - 1, 'tabula rasa wipe-outs before producing the following configuration'
     print config
     print
-    config_per = periodicize(config)
+    config_per = periodicize(config) #periodizes each x,y contained in config.
     snapshot(config_per, colors, border_color = 'k')

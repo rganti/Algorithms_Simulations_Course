@@ -1,7 +1,7 @@
 import random, math
 
 def dist(x,y):
-    d_x = abs(x[0] - y[0]) % 1.0
+    d_x = abs(x[0] - y[0]) % 1.0 #what's percentage doing over here
     d_x = min(d_x, 1.0 - d_x)
     d_y = abs(x[1] - y[1]) % 1.0
     d_y = min(d_y, 1.0 - d_y)
@@ -15,7 +15,7 @@ def direct_disks(N, sigma):
         L = [(random.random(), random.random())]
         for k in range(1, N):
             a = (random.random(), random.random())
-            min_dist = min(dist(a, b) for b in L) 
+            min_dist = min(dist(a, b) for b in L) #will calculate distance b/w two circles a, b
             if min_dist < 2.0 * sigma: 
                 condition = False
                 break

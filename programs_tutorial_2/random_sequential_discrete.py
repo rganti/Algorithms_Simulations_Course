@@ -10,7 +10,7 @@ for i in range(n_runs):
     while True:
         blue_rod = random.randint(0, 4)
         if abs(red_rod - blue_rod) > 2: break
-    conf = configurations[(red_rod, blue_rod)]  
+    conf = configurations[(red_rod, blue_rod)]
     counts[conf] += 1
 for conf in counts: 
     print conf, counts[conf] / float(n_runs)    

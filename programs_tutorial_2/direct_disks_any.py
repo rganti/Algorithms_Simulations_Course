@@ -13,9 +13,9 @@ pairs = [(i, j) for i in range(N - 1) for j in range(i + 1, N)]
 eta_max_list = []
 for conf in xrange(n_confs):
     L = [(random.random(), random.random()) for k in range(N)]
-    sigma_max = min(dist(L[i], L[j]) for i, j in pairs) / 2.0
-    eta_max = N * math.pi * sigma_max ** 2
-    eta_max_list.append(eta_max)
+    sigma_max = min(dist(L[i], L[j]) for i, j in pairs) / 2.0 #find the disks closest together and set this as sigma_max
+    eta_max = N * math.pi * sigma_max ** 2 #computes max density allowed for given radius of disks
+    eta_max_list.append(eta_max) #generates histogram for each max density value
 
 # Begin of graphics output
 pylab.figure()
